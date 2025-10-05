@@ -45,9 +45,6 @@ long long querysumX(long long i,long long l,long long r,long long x1,long long y
     if(r<x1 || x2<l){   //out of bound case
         return 0;
     }
-    if(l==r){
-        return querySumY(i,0,0,M-1,y1,y2,segmentTree);
-    }
     if(x1<=l && r<=x2){
         return querySumY(i,0,0,M-1,y1,y2,segmentTree);
     }
