@@ -2,6 +2,7 @@
 using namespace std;
 
 long long dijkstra(vector<long long>& parent,vector<vector<long long>>& adj,long long n,long long src,long long dest){
+
     priority_queue<pair<long long,long long>,vector<pair<long long,long long>>,greater<pair<long long,long long>>> pq;
     vector<long long> distance(n,INT_MAX);
     distance[0]=0;
@@ -13,7 +14,7 @@ long long dijkstra(vector<long long>& parent,vector<vector<long long>>& adj,long
         long long u=pq.top().second;
         pq.pop();
         if(u == dest){
-            return dest;
+            return dist;
         }
         if(dist>distance[u]){
             continue;
@@ -46,7 +47,7 @@ int main(){
 
     vector<vector<long long>> adj(n);
     
-    for(int i=0;i<n;i++){
+    for(int i=0;i<m;i++){
         long long u=edges[i].first;
         long long v=edges[i].second;
         adj[u].push_back(v);
@@ -57,14 +58,19 @@ int main(){
     long long data=dijkstra(parent,adj,n,0,n-1);
     
     if(data==INT_MAX){
-        cout<<"NOT POSSIBLE"<<endl;
+        cout<<"IMPOSSIBLE"<<endl;
     }
     else{
-        cout<<data<<endl;
+        vector<int> points;
         long long node=n-1;
         while(node!=-1LL){
-            cout<<node+1<<" ";
+            points.push_back(node+1LL);
             node=parent[node];
+        }
+        long long sz=points.size();
+        cout<<sz<<endl;
+        for(long long i=sz-1LL;i>=0LL;i--){
+            cout<<points[i]<<" ";            
         }
         cout<<endl;
     }
