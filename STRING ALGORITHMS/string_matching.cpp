@@ -1,21 +1,24 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-
-vector<long long> createLPS(string& target,long long n){
+vector<long long> createLPS(string& pat){
+  long long n=pat.length();
+  
+  
   vector<long long> LPS(n,0);
-  LPS[0] = 0;
-  long long length = 0LL;
+  long long length = 0;
+  LPS[0] = length;
   long long j=1LL;
+  
   while(j<n){
-    if(target[j] == target[length]){
+    if(pat[j] == pat[length]){
       length++;
       LPS[j] = length;
       j++;
     }
     else{
-      if(length-1>=0){
-        length = LPS[length-1LL];
+      if(length>0){
+        length=LPS[length-1];
       }
       else{
         LPS[j] = 0LL;
@@ -24,24 +27,29 @@ vector<long long> createLPS(string& target,long long n){
     }
   }
   return LPS;
+  
 }
 
-long long countOccurences(string& s,string& target,long long m,long long n,vector<long long>& LPS){
-  long long ans = 0;
+
+long long solve(string& s,string& pat,vector<long long>& LPS){
+  long long ans=0LL;
   
   long long i=0LL,j=0LL;
+  long long m=s.length(),n=pat.length();
   
   while(i<m){
-    if(s[i] == s[j]){
+    if(s[i] == pat[j]){
       i++;
       j++;
     }
-    if(j == m){
+    if(j == n){
+    // cout<<"hi"<<endl;
       ans++;
+      j=LPS[j-1];
     }
-    if(s[i]!=s[j]){
-      if(j-1>=0){
-        j = LPS[j-1];
+    if(s[i]!=pat[j]){
+      if(j>0){
+        j=LPS[j-1];
       }
       else{
         i++;
@@ -49,18 +57,16 @@ long long countOccurences(string& s,string& target,long long m,long long n,vecto
     }
   }
   return ans;
-  
 }
 
-int main(){
-  
-  
-  string s = "abdjfbejhfguygrrhgggfghhhjgggjhkhjihjggg";
-  
-  string target = "gg";
-  
-  
-  vector<long long> LPS = createLPS(target,target.length());
-  
-  return 0;
+int main() 
+{
+    string s,pat;
+    cin>>s;
+    cin>>pat;
+    
+    vector<long long> LPS = createLPS(pat);
+    cout<<solve(s,pat,LPS)<<endl;
+    
+    return 0;
 }
