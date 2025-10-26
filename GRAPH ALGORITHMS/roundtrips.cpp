@@ -13,7 +13,7 @@ bool f(long long n,vector<vector<long long>>& adj,long long u,long long p){
     if(v == p) continue;
     vector<long long> ans;
     if (visited[v]) {
-    stack<long long> temp = stk;
+    stack<long long> temp = stk;  // temp stack
     vector<long long> rev;
     while (!temp.empty()) {
         rev.push_back(temp.top());
