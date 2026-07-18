@@ -1,31 +1,55 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-bool isPrime(int num){
-    if(num%2==0 || num==1){
+bool isPrime(int num)
+{
+
+    if (num == 1)
+    {
         return false;
     }
-    if(num==2){
+
+    if (num == 2)
+    {
         return true;
     }
-    for(int i=3;i<num;i+=2){
-        if(num%i==0){
+
+    if (num % 2 == 0)
+    {
+        return false;
+    }
+
+    for (int i = 3; i < num; i += 2)
+    {
+        if (num % i == 0)
+        {
             return false;
         }
     }
+
     return true;
 }
 
-int main(){
+int main()
+{
 
-    int n;
-    cin>>n;
+    int n, t;
+    cin >> t;
 
-    for(int i=n+1;i<=n+600;i++){
-        if(isPrime(i)){
-            cout<<i<<endl;
-            break;
-        }
+    vector<int> aa;
+
+    while (t--)
+    {
+        cin >> n;
+        aa.push_back(n);
+    }
+
+    for (int n : aa)
+    {
+        int x = n + 1;
+        while (!isPrime(x))
+            x++;
+        cout << x << '\n';
     }
 
     return 0;
