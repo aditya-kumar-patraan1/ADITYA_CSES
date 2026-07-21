@@ -4,25 +4,28 @@ using namespace std;
 class Node
 {
 public:
-    int sum;
-    int prefEnding;
-    int prefNotEndingButMax;
+    long long sum;
+    long long prefEnding;
+    long long prefNotEndingButMax;
+    long long maxSuffix;
 
     Node()
     {
-        this->sum = 0;
-        this->prefEnding = 0;
-        this->prefNotEndingButMax = 0;
+        sum = 0;
+        prefEnding = 0;
+        prefNotEndingButMax = 0;
+        maxSuffix = 0;
     }
 };
 
-void buildSegmentTree(int i, int l, int r, vector<Node> &segmentTree, vector<int> &nums)
+void buildSegmentTree(int i, int l, int r, vector<Node> &segmentTree, vector<long long> &nums)
 {
     if (l == r)
     {
         segmentTree[i].prefEnding = nums[l];
         segmentTree[i].prefNotEndingButMax = 0;
         segmentTree[i].sum = nums[l];
+        segmentTree[i].maxSuffix = nums[l];
         return;
     }
 
@@ -31,18 +34,32 @@ void buildSegmentTree(int i, int l, int r, vector<Node> &segmentTree, vector<int
     buildSegmentTree(2 * i + 1, l, mid, segmentTree, nums);
     buildSegmentTree(2 * i + 2, mid + 1, r, segmentTree, nums);
 
-    segmentTree[i].prefEnding = max({segmentTree[2 * i + 2].prefEnding, segmentTree[2 * i + 2].sum + segmentTree[2 * i + 1].prefEnding});
+    segmentTree[i].prefEnding = max({segmentTree[2 * i + 2].prefEnding,
+                                     segmentTree[2 * i + 2].sum + segmentTree[2 * i + 1].prefEnding});
+
     segmentTree[i].sum = segmentTree[2 * i + 1].sum + segmentTree[2 * i + 2].sum;
-    segmentTree[i].prefNotEndingButMax = max({segmentTree[2 * i + 2].prefNotEndingButMax, segmentTree[2 * i + 1].prefEnding, segmentTree[2 * i + 1].prefNotEndingButMax, segmentTree[2 * i + 1].sum});
+
+    segmentTree[i].prefNotEndingButMax = max({
+        segmentTree[2 * i + 2].prefNotEndingButMax,
+        segmentTree[2 * i + 1].prefEnding,
+        segmentTree[2 * i + 1].prefNotEndingButMax,
+        segmentTree[2 * i + 1].sum,
+        max(segmentTree[2 * i + 1].sum, segmentTree[2 * i + 1].prefEnding) + segmentTree[2 * i + 2].maxSuffix});
+
+    segmentTree[i].maxSuffix = max({
+        segmentTree[2 * i + 1].maxSuffix,
+        segmentTree[2 * i + 1].sum + segmentTree[2 * i + 2].maxSuffix,
+        segmentTree[2 * i + 1].sum});
 }
 
-void pointUpdateQuery(int i, int l, int r, int idx, int val, vector<Node> &segmentTree)
+void pointUpdateQuery(int i, int l, int r, int idx, long long val, vector<Node> &segmentTree)
 {
     if (l == r)
     {
         segmentTree[i].prefEnding = val;
         segmentTree[i].prefNotEndingButMax = 0;
         segmentTree[i].sum = val;
+        segmentTree[i].maxSuffix = val;
         return;
     }
 
@@ -50,7 +67,6 @@ void pointUpdateQuery(int i, int l, int r, int idx, int val, vector<Node> &segme
 
     if (idx <= mid)
     {
-        // move left
         pointUpdateQuery(2 * i + 1, l, mid, idx, val, segmentTree);
     }
     else
@@ -58,14 +74,26 @@ void pointUpdateQuery(int i, int l, int r, int idx, int val, vector<Node> &segme
         pointUpdateQuery(2 * i + 2, mid + 1, r, idx, val, segmentTree);
     }
 
-    segmentTree[i].prefEnding = max({segmentTree[2 * i + 2].prefEnding, segmentTree[2 * i + 2].sum + segmentTree[2 * i + 1].prefEnding});
+    segmentTree[i].prefEnding = max({segmentTree[2 * i + 2].prefEnding,
+                                     segmentTree[2 * i + 2].sum + segmentTree[2 * i + 1].prefEnding});
+
     segmentTree[i].sum = segmentTree[2 * i + 1].sum + segmentTree[2 * i + 2].sum;
-    segmentTree[i].prefNotEndingButMax = max({segmentTree[2 * i + 2].prefNotEndingButMax, segmentTree[2 * i + 1].prefEnding, segmentTree[2 * i + 1].prefNotEndingButMax, segmentTree[2 * i + 1].sum});
+
+    segmentTree[i].prefNotEndingButMax = max({
+        segmentTree[2 * i + 2].prefNotEndingButMax,
+        segmentTree[2 * i + 1].prefEnding,
+        segmentTree[2 * i + 1].prefNotEndingButMax,
+        segmentTree[2 * i + 1].sum,
+        max(segmentTree[2 * i + 1].sum, segmentTree[2 * i + 1].prefEnding) + segmentTree[2 * i + 2].maxSuffix});
+
+    segmentTree[i].maxSuffix = max({
+        segmentTree[2 * i + 1].maxSuffix,
+        segmentTree[2 * i + 1].sum + segmentTree[2 * i + 2].maxSuffix,
+        segmentTree[2 * i + 1].sum});
 }
 
-int maxSumQuery(int i, int l, int r, int start, int end, vector<Node> &segmentTree)
+long long maxSumQuery(int i, int l, int r, int start, int end, vector<Node> &segmentTree)
 {
-
     if (end < l || r < start)
     {
         return 0;
@@ -73,24 +101,25 @@ int maxSumQuery(int i, int l, int r, int start, int end, vector<Node> &segmentTr
 
     if (start <= l && r <= end)
     {
-        return max({segmentTree[i].sum, segmentTree[i].prefEnding, segmentTree[i].prefNotEndingButMax});
+        return max({segmentTree[i].sum,
+                    segmentTree[i].prefEnding,
+                    segmentTree[i].prefNotEndingButMax,
+                    segmentTree[i].maxSuffix});
     }
 
     int mid = l + (r - l) / 2;
-    cout<<"mid : "<<mid<<endl;
 
-    int rightAns = maxSumQuery(2 * i + 2, mid + 1, r, start, end, segmentTree);
+    long long rightAns = maxSumQuery(2 * i + 2, mid + 1, r, start, end, segmentTree);
 
     return rightAns;
 }
 
 int main()
 {
-
     int n, m;
     cin >> n >> m;
 
-    vector<int> nums(n);
+    vector<long long> nums(n);
 
     for (int i = 0; i < n; i++)
     {
@@ -101,29 +130,25 @@ int main()
 
     buildSegmentTree(0, 0, n - 1, segmentTree, nums);
 
-    vector<array<int, 2>> q;
+    vector<array<long long, 2>> q;
 
     for (int i = 0; i < m; i++)
     {
-        int k, x;
+        int k;
+        long long x;
         cin >> k >> x;
         k--;
         q.push_back({k, x});
     }
 
-    // cout<<"Overall : "<<maxSumQuery(0, 0, n - 1, 0, n - 1, segmentTree)<<endl;
-
     for (int i = 0; i < m; i++)
     {
         int k = q[i][0];
-        int x = q[i][1];
-        // cout<<"for k : "<<k<<" and x : "<<x<<endl;
-        // cout<<"calling pointUpdateQuery..."<<endl;
-        // i,l,r,idx,val,segmentTree
+        long long x = q[i][1];
+
         pointUpdateQuery(0, 0, n - 1, k, x, segmentTree);
-        // i,0,n-1,0,n-1,segmentTree
-        // cout<<"calling maxSumQuery..."<<endl;
-        cout << maxSumQuery(0, 0, n - 1, 0, n - 1, segmentTree) << endl;
+
+        cout << maxSumQuery(0, 0, n - 1, 0, n - 1, segmentTree) << '\n';
     }
 
     return 0;
