@@ -59,6 +59,8 @@ int main(){
         }
     }
 
+    helper();
+
 
 
     
