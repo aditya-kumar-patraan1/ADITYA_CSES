@@ -87,6 +87,7 @@ ADITYA_CSES/
 | 10 | Static Range XOR | [static_range_xor.cpp](./RANGE_QUERIES/static_range_xor.cpp) |
 | 11 | Subarray Sum Queries | [subarray_sum_queries.cpp](./RANGE_QUERIES/subarray_sum_queries.cpp) |
 | 12 | Subarray Sum Queries II | [subarray_sum_queries_ii.cpp](./RANGE_QUERIES/subarray_sum_queries_ii.cpp) |
+| 13 | Pizzeria Queries | [pizzeria_queries.cpp](./RANGE_QUERIES/pizzeria_queries.cpp) |
 
 ---
 
