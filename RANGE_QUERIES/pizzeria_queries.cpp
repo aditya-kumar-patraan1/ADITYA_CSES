@@ -94,8 +94,9 @@ int main()
     buildSegmentTree(0, 0, n - 1, segmentTreeFromLeft, nums, 0);
     buildSegmentTree(0, 0, n - 1, segmentTreeFromRight, nums, n - 1);
 
+    
     for (int i = 0; i < q; i++)
-    {
+    { 
         ll option = queries[i][0];
         if (option == 1)
         {
