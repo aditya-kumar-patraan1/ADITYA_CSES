@@ -131,7 +131,7 @@ ADITYA_CSES/
 | 🔢 Dynamic Programming | 3 |
 | 🌐 Graph Algorithms | 6 |
 | ➗ Maths | 6 |
-| 📊 Range Queries | 12 |
+| 📊 Range Queries | 13 |
 | 🪟 Sliding Window | 10 |
 | 🔤 String Algorithms | 3 |
 | 🌳 Tree Algorithms | 1 |
