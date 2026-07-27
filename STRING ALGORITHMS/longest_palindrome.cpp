@@ -24,15 +24,15 @@ int main()
 
     for (int i = 0; i < newSize; i++)
     {
-        int center = 2 * center - i;
+        int mirror = 2 * center - i;
 
         if (right > i)
         {
-            palin[i] = min(center, right - i);
+            palin[i] = min(palin[mirror], right - i);
         }
 
-        int a = palin[i] + (i + 1);
-        int b = palin[i] - (i + 1);
+        int a = i + (palin[i] + 1);
+        int b = i - (palin[i] + 1);
 
         while (b >= 0 && a < newSize && modifiedS[a] == modifiedS[b])
         {
@@ -41,12 +41,33 @@ int main()
             b--;
         }
 
-        if (palin[i] + i > center)
+        if (palin[i] + i > right)
         {
             center = i;
             right = palin[i] + i;
         }
     }
 
+    int e_i = 0;
+    int s_i = 0;
+
+    for (int i = 0; i < newSize; i++)
+    {
+        int start = (i - palin[i]) / 2;
+        int end = (i + palin[i]) / 2 - 1;
+
+        if (start >= 0 && end < n)
+        {
+            if(end - start + 1 > e_i - s_i + 1){
+                s_i = start;
+                e_i = end;
+            }
+        }
+    }
+
+    string ans="";
+    for(int i=s_i;i<=e_i;i++) ans+=s[i];
+    cout<<ans<<endl;
+    
     return 0;
 }
