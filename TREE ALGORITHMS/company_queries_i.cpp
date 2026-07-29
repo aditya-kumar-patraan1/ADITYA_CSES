@@ -24,6 +24,30 @@ void dfs(int u,int par,vector<vector<int>>& adj,vector<vector<int>>& sparseTable
             dfs(v,u,adj,sparseTable);
         }
     }
+}
+
+int computeLCA(int u,int v,int MAXN,vector<vector<int>>& sparseTable,vector<int>& depth){
+    
+    if(depth[v]>depth[u]) swap(u,v);
+    int diff = depth[u] - depth[v];
+
+    while(diff>0){
+        int x = getLog(diff);
+        u = sparseTable[x][u];
+        diff-=x;
+    }
+
+    if(u==v) return u;
+
+    for(int k=MAXN;k>=0;k--){
+        if(sparseTable[k][u]!=sparseTable[k][v]){
+            u = sparseTable[k][u];
+            v = sparseTable[k][v];
+        }
+    }
+
+    return sparseTable[0][u]; 
+
 
 }
 
