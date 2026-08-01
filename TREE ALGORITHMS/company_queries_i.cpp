@@ -26,6 +26,15 @@ void dfs(int u,int par,vector<vector<int>>& adj,vector<vector<int>>& sparseTable
     }
 }
 
+int getLog(int num){
+    for(int k=31;k>=0;k--){
+        if((num&(1<<k))>0){
+            return k;
+        }
+    }
+    return 0;
+}
+
 int computeLCA(int u,int v,int MAXN,vector<vector<int>>& sparseTable,vector<int>& depth){
     
     if(depth[v]>depth[u]) swap(u,v);
@@ -84,6 +93,8 @@ int main(){
     }
 
     helper();
+
+
 
 
 
