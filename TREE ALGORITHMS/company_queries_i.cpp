@@ -15,6 +15,8 @@ vector<vector<int>> makeAdj(vector<int>& edges,int n){
 
 }
 
+
+
 void dfs(int u,int par,vector<vector<int>>& adj,vector<vector<int>>& sparseTable){
 
     sparseTable[0][u] = par;
@@ -57,7 +59,16 @@ int computeLCA(int u,int v,int MAXN,vector<vector<int>>& sparseTable,vector<int>
 
     return sparseTable[0][u]; 
 
+}
 
+void helper(int u,int par,vector<vector<int>>& adj,vector<int>& depth){
+
+    for(int v : adj[u]){
+        if(v!=par){
+            depth[v]+=depth[u]+1;
+            helper(v,u,adj,depth);
+        }
+    }
 }
 
 int main(){
@@ -83,6 +94,10 @@ int main(){
 
     vector<vector<int>> sparseTable(maxN+1,vector<int>(n,-1));
 
+    // getting the depth array filled
+    vector<int> depth(n);
+    helper(0,-1,adj,depth);
+
     // filling for the 0-th parent using dfs()
     dfs(0,-1,adj);
 
@@ -92,7 +107,6 @@ int main(){
         }
     }
 
-    helper();
 
 
 
